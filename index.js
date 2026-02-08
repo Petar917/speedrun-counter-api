@@ -5,26 +5,25 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// JSON Body erlauben
 app.use(express.json());
 
-// Speicherordner
+// Ordner für Runs
 const RUNS_DIR = path.join(__dirname, "runs");
 if (!fs.existsSync(RUNS_DIR)) {
   fs.mkdirSync(RUNS_DIR);
 }
 
-// Root – Test
+// Root-Test
 app.get("/", (req, res) => {
   res.send("Speedrun Counter API OK");
 });
 
-// Ping – Debug
+// Ping-Test
 app.get("/ping", (req, res) => {
   res.json({ ok: true, message: "pong" });
 });
 
-// Submit Run – DAS ist die wichtige Route
+// Submit (POST)
 app.post("/submit", (req, res) => {
   const data = req.body;
 
@@ -37,13 +36,17 @@ app.post("/submit", (req, res) => {
 
   fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
 
-  res.json({
-    ok: true,
-    saved: filename
-  });
+  res.json({ ok: true, saved: filename });
+});
+
+// Runs anzeigen (GET)
+app.get("/runs", (req, res) => {
+  const files = fs.readdirSync(RUNS_DIR);
+  res.json({ count: files.length, files });
 });
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
