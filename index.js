@@ -41,15 +41,19 @@ app.post("/submit", (req, res) => {
 
 // Runs anzeigen (GET)
 app.get("/runs/full", (req, res) => {
-  const files = fs.readdirSync(RUNS_DIR);
+  const files = fs.readdirSync(RUNS_DIR).filter(f => f.endsWith(".json"));
 
   const runs = files.map((file) => {
     const content = fs.readFileSync(path.join(RUNS_DIR, file), "utf-8");
-    const data = JSON.parse(content);
-    return data;
+    return JSON.parse(content);
   });
 
   res.json(runs);
 });
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 
 
