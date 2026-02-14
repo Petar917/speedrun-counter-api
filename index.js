@@ -48,7 +48,7 @@ app.get("/runs/full", (req, res) => {
     return JSON.parse(content);
   });
 
-  res.json({runs: runs});
+  res.json(runs);
 });
 
 app.listen(PORT, () => {
